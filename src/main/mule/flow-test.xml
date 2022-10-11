@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="18724a37-61a3-4664-bfc3-96649be9cf56" >
+		<http:listener-connection host="localhost" port="${http.port}" />
+	</http:listener-config>
+	<file:config name="File_Config" doc:name="File Config" doc:id="dd08f17e-5536-421c-9e87-62363f7c8eff" />
+	<configuration-properties doc:name="Configuration properties" doc:id="80671c83-ea99-420f-8cd6-17390a727250" file="dev.yaml"/>
+	<configuration-properties doc:name="Configuration properties" doc:id="b58e8d24-20a5-4cfd-9059-105eb830eadc" file="dev.yaml" />
+	<flow name="flow-testFlow" doc:id="6d646aca-9a4a-41cc-8066-2b28ee8b74d9" >
+		<http:listener doc:name="Listener" doc:id="ce97ef8e-ac4b-41d8-afb8-8e87495a1370" config-ref="HTTP_Listener_config" path="/test1"/>
+		<logger level="INFO" doc:name="Logger" doc:id="ea9cefad-f95e-409b-892c-c5033b354706" message="start-flow."/>
+		<ee:transform doc:name="Transform Message" doc:id="6487049b-785e-4fa7-bd44-568607fbe7c9">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload.PersonID]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="name" ><![CDATA[attributes.queryParams.name]]></ee:set-variable>
+				<ee:set-variable variableName="method" ><![CDATA[attributes.method]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="7d51680b-5cff-407b-84d0-1d46acc82b02" message="end-flow"/>
+	</flow>
+	<flow name="flow-testFlow-chintu" doc:id="706bb77d-67eb-49b4-aba5-db06b5b284a9" >
+		<set-payload value='#["chintu"]' doc:name="Set Payload" doc:id="ea2b5acd-ef56-4ea7-b702-ec344e25acda" />
+	</flow>
+</mule>
